@@ -16,7 +16,7 @@ This suite evaluates all three, and publishes everything — harness, task datas
 
 ## Deployment context
 
-The suite is designed against the **Evidence Lab**, a climate–health early-warning platform for Kerala, India, developed with the [Nayaneethi Policy Collective](https://www.nayaneethi.com) (Wayanad, Kerala). Its planned user-facing layer is a grounded chat assistant for health officials ("Is risk rising in my district this week? Why?") backed by a provenance-first indicator store built from Copernicus climate data, HMIS facility reporting, IHIP/IDSP disease surveillance, and NFHS survey data. The platform itself is pre-prototype and fundraised separately; this evaluation suite is deliberately scoped to stand alone.
+The suite is designed against **First Signal**, a climate–health early-warning platform for Kerala, India, developed with the [Nayaneethi Policy Collective](https://www.nayaneethi.com) (Wayanad, Kerala). Its planned user-facing layer is a grounded chat assistant for health officials ("Is risk rising in my district this week? Why?") backed by a provenance-first indicator store built from Copernicus climate data, HMIS facility reporting, IHIP/IDSP disease surveillance, and NFHS survey data. The platform itself is pre-prototype and fundraised separately; this evaluation suite is deliberately scoped to stand alone.
 
 Kerala offers an unusually demanding test bed: a strong decentralised health system, monsoon-driven outbreak dynamics (the 2018 floods and subsequent leptospirosis surge), and repeated spillovers of a high-consequence pathogen (Nipah virus, 2018 and 2023) — exactly the conditions under which AI interpretive reliability matters most. Validation runs with Kerala health-system practitioners convened through Nayaneethi.
 
@@ -32,7 +32,7 @@ The tasks are not hypothetical — they mirror the queries, languages, data cond
 
 ## Team and context
 
-Led by Balasubramanyam Pattath (PhD economist / data scientist, Geneva Graduate Institute; native Malayalam speaker), consultant with the [Nayaneethi Policy Collective](https://www.nayaneethi.com) (Wayanad, Kerala), which hosts the Evidence Lab initiative and supplies the local health-system networks, epidemiologist review, and Malayalam-speaking reviewers behind the evaluation items.
+Led by Balasubramanyam Pattath (PhD economist / data scientist, Geneva Graduate Institute; native Malayalam speaker), consultant with the [Nayaneethi Policy Collective](https://www.nayaneethi.com) (Wayanad, Kerala), which hosts the First Signal initiative and supplies the local health-system networks, epidemiologist review, and Malayalam-speaking reviewers behind the evaluation items.
 
 ## Licensing
 

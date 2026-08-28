@@ -16,7 +16,7 @@ No public benchmark covers this deployment class. This suite is scoped to fill t
 
 ## 2. Deployment context
 
-The suite is designed against the Evidence Lab, a climate–health early-warning platform for Kerala, India, developed with the Nayaneethi Policy Collective (Wayanad, Kerala) — currently pre-prototype and fundraised separately. Its planned user-facing layer is a grounded chat assistant for health officials, specified to answer questions like *"Is risk rising in my district this week? Why?"* by querying a provenance-first indicator store (Copernicus ERA5-Land climate data, HMIS facility reporting, IHIP/IDSP disease surveillance, NFHS survey data, community reports) and returning numbers with sources and uncertainty attached — never free-generating statistics.
+The suite is designed against First Signal, a climate–health early-warning platform for Kerala, India, developed with the Nayaneethi Policy Collective (Wayanad, Kerala) — currently pre-prototype and fundraised separately. Its planned user-facing layer is a grounded chat assistant for health officials, specified to answer questions like *"Is risk rising in my district this week? Why?"* by querying a provenance-first indicator store (Copernicus ERA5-Land climate data, HMIS facility reporting, IHIP/IDSP disease surveillance, NFHS survey data, community reports) and returning numbers with sources and uncertainty attached — never free-generating statistics.
 
 Kerala supplies unusually demanding test conditions: monsoon-driven outbreak dynamics (the 2018 floods were followed by a major leptospirosis surge) and repeated spillovers of a high-consequence pathogen (Nipah virus, 2018 and 2023). A district health official interpreting an ambiguous fever cluster in a district with Nipah history is precisely the user whose AI assistant must not overclaim. Evaluation items and results are validated with Kerala health-system practitioners convened through Nayaneethi.
 
@@ -84,4 +84,4 @@ The suite evaluates *defensive* reliability: whether models serve health decisio
 
 ## 8. Status and funding
 
-Design phase is complete (this document, the [task taxonomy](TASK_TAXONOMY.md), and the [roadmap](../ROADMAP.md)). Build is pending seed funding for evaluation compute, API credits, expert honoraria, and dedicated build time. The parent Evidence Lab platform (Nayaneethi Policy Collective) is fundraised separately; this evaluation layer is deliberately scoped to stand alone and be reusable by others.
+Design phase is complete (this document, the [task taxonomy](TASK_TAXONOMY.md), and the [roadmap](../ROADMAP.md)). Build is pending seed funding for evaluation compute, API credits, expert honoraria, and dedicated build time. The parent First Signal platform (Nayaneethi Policy Collective) is fundraised separately; this evaluation layer is deliberately scoped to stand alone and be reusable by others.

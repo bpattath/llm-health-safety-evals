@@ -27,6 +27,6 @@ If funding is constrained, the Kerala validation runs remotely (video workshops)
 
 ## Out of scope (this phase)
 
-- The Evidence Lab platform and assistant prototype itself (separately fundraised)
+- The First Signal platform and assistant prototype itself (separately fundraised)
 - Languages beyond English/Malayalam (the harness is built to make adding languages cheap)
 - Live deployment monitoring (a natural phase 2 once the assistant exists)
