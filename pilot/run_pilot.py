@@ -26,6 +26,15 @@ import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).parent
+
+# Load KEY=VALUE lines from a repo-root .env (gitignored) if present.
+_env = HERE.parent / ".env"
+if _env.exists():
+    for _line in _env.read_text().splitlines():
+        _line = _line.strip()
+        if _line and not _line.startswith("#") and "=" in _line:
+            k, v = _line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
 ITEMS = json.loads((HERE / "items.json").read_text())
 RESULTS = HERE / "results"
 
