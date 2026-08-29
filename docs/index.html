@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM Health Safety Evals — Pilot Explorer</title>
+<style>
+  :root{
+    --bg:#f6f8f8; --panel:#ffffff; --ink:#1e2a2e; --muted:#5b6b70;
+    --teal:#16606e; --teal-dark:#0f3d47; --terra:#b85042; --gold:#c9962e;
+    --line:#e2e8e9; --chip:#eaf2f3; --code:#f0f4f4;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0f1719; --panel:#152023; --ink:#e8eef0; --muted:#9db0b5;
+      --teal:#4fa8b8; --teal-dark:#dce7ea; --terra:#d98376; --gold:#d9b25f;
+      --line:#243237; --chip:#1a2b30; --code:#0d1517; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  header{background:var(--teal-dark);color:#fff;padding:28px 24px 22px}
+  @media (prefers-color-scheme: dark){ header{background:#0b2a31} }
+  header .wrap{max-width:1100px;margin:0 auto}
+  header h1{margin:0 0 4px;font-size:1.5rem;font-weight:700;color:#fff}
+  header p{margin:0;color:#cadcfc;font-size:.95rem}
+  header a{color:#c9962e;text-decoration:none}
+  .status{display:inline-block;margin-top:10px;padding:3px 12px;border-radius:999px;
+          background:rgba(201,150,46,.18);color:#e9c96b;font-size:.8rem;font-weight:600;letter-spacing:.03em}
+  .layout{max-width:1100px;margin:20px auto;display:grid;grid-template-columns:280px 1fr;gap:16px;padding:0 16px}
+  @media(max-width:760px){.layout{grid-template-columns:1fr}}
+  .side,.main{background:var(--panel);border:1px solid var(--line);border-radius:12px}
+  .side{padding:14px;align-self:start;position:sticky;top:12px}
+  .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  .filters button{border:1px solid var(--line);background:var(--chip);color:var(--ink);
+    padding:4px 10px;border-radius:999px;font-size:.78rem;cursor:pointer}
+  .filters button.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .itemlist{list-style:none;margin:0;padding:0}
+  .itemlist li{padding:8px 10px;border-radius:8px;cursor:pointer;display:flex;gap:8px;align-items:baseline}
+  .itemlist li:hover{background:var(--chip)}
+  .itemlist li.sel{background:var(--teal);color:#fff}
+  .itemlist li.sel small{color:#d5e6ea}
+  .itemlist .id{font-weight:700;font-size:.85rem;min-width:34px}
+  .itemlist small{color:var(--muted);font-size:.78rem}
+  .main{padding:22px}
+  .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.75rem;font-weight:600;margin-right:6px}
+  .badge.grounding{background:var(--chip);color:var(--teal)}
+  .badge.epidemic_signal{background:#f8ede9;color:var(--terra)}
+  @media (prefers-color-scheme: dark){ .badge.epidemic_signal{background:#2e1f1c} }
+  h2{margin:.2em 0 .4em;font-size:1.2rem}
+  h3{font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:1.4em 0 .4em}
+  .prompt{background:var(--chip);border-left:3px solid var(--teal);padding:10px 14px;border-radius:0 8px 8px 0;font-size:.98rem}
+  pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:12px;
+      overflow-x:auto;font-size:.8rem;line-height:1.45;margin:0}
+  details summary{cursor:pointer;color:var(--teal);font-size:.85rem;margin-bottom:6px}
+  .target{border:1px dashed var(--line);border-radius:8px;padding:10px 14px;font-size:.92rem}
+  .checks{display:flex;flex-wrap:wrap;gap:6px}
+  .checks span{background:var(--chip);border-radius:6px;padding:3px 9px;font-size:.76rem;color:var(--muted)}
+  .pending{border:1px solid var(--line);border-radius:8px;padding:16px;text-align:center;color:var(--muted);font-size:.9rem}
+  .resp{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:10px}
+  .resp .model{font-weight:700;font-size:.85rem}
+  .resp .flags{margin-top:6px}
+  .resp .flag{display:inline-block;background:#f8ede9;color:var(--terra);border-radius:6px;
+              padding:2px 8px;font-size:.74rem;margin-right:5px}
+  .resp .flag.clean{background:var(--chip);color:var(--teal)}
+  .resp .text{margin-top:8px;font-size:.9rem;white-space:pre-wrap}
+  footer{max-width:1100px;margin:24px auto 40px;padding:0 16px;color:var(--muted);font-size:.8rem}
+  .sys details{margin-top:8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>LLM Health Safety Evals — Pilot Explorer</h1>
+    <p>12 pilot items probing grounding and epidemic-signal reliability for LLM health decision-support ·
+       <a href="https://github.com/bpattath/llm-health-safety-evals">GitHub</a></p>
+    <span class="status" id="status">Loading…</span>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="side">
+    <div class="filters" id="filters">
+      <button data-track="all" class="active">All</button>
+      <button data-track="grounding">Grounding</button>
+      <button data-track="epidemic_signal">Epidemic signal</button>
+    </div>
+    <ul class="itemlist" id="itemlist"></ul>
+  </nav>
+  <main class="main" id="detail"><div class="pending">Loading items…</div></main>
+</div>
+
+<footer>
+  First Signal · Nayaneethi Policy Collective, Wayanad, Kerala · Items CC-BY-4.0, code MIT ·
+  All fixtures are synthetic; automatic flags are heuristics pending human confirmation.
+</footer>
+
+<script>
+let DATA=null, sel=null, track='all';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+fetch('pilot-data.json').then(r=>r.json()).then(d=>{
+  DATA=d; sel=d.items[0].id;
+  $('status').textContent = d.models.length
+    ? `Pilot results: ${d.models.length} model${d.models.length>1?'s':''} · flags pending human confirmation`
+    : 'Design phase · pilot run pending — item set final, results will appear here';
+  renderList(); renderDetail();
+}).catch(()=>{ $('detail').innerHTML='<div class="pending">Could not load pilot-data.json</div>'; });
+
+document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>{
+  track=b.dataset.track;
+  document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('active',x===b));
+  renderList();
+});
+
+function renderList(){
+  const ul=$('itemlist'); ul.innerHTML='';
+  DATA.items.filter(i=>track==='all'||i.track===track).forEach(i=>{
+    const li=document.createElement('li');
+    li.className=i.id===sel?'sel':'';
+    li.innerHTML=`<span class="id">${esc(i.id)}</span><span>${esc(i.type.replaceAll('_',' '))}<br><small>${esc(i.track.replaceAll('_',' '))}</small></span>`;
+    li.onclick=()=>{sel=i.id;renderList();renderDetail();};
+    ul.appendChild(li);
+  });
+}
+
+function renderDetail(){
+  const it=DATA.items.find(i=>i.id===sel);
+  const checks={fabrication_risk:'fabricated-number detection',premise_correction:'premise-correction check',
+    caveat_required:'data-quality caveat check',extrapolation_risk:'silent-extrapolation check',
+    no_confident_conclusion:'confident-conclusion detection',pressure:'pressure-resistance probe'};
+  let respHtml;
+  if(!DATA.models.length){
+    respHtml=`<div class="pending">No pilot runs yet. Run <code>pilot/run_pilot.py</code> with an API key,
+      then <code>pilot/export_site.py</code> — model responses and flags render here automatically.</div>`;
+  }else{
+    const rs=DATA.responses[it.id]||{};
+    respHtml=DATA.models.map(m=>{
+      const r=rs[m];
+      if(!r) return `<div class="resp"><span class="model">${esc(m)}</span><div class="pending">no record</div></div>`;
+      const flags=r.auto_flags.length
+        ? r.auto_flags.map(f=>`<span class="flag">${esc(f)}</span>`).join('')
+        : '<span class="flag clean">clean (auto)</span>';
+      return `<div class="resp"><span class="model">${esc(r.resolved_model||m)}</span>
+        <div class="flags">${flags}</div><div class="text">${esc(r.response)}</div></div>`;
+    }).join('');
+  }
+  $('detail').innerHTML=`
+    <span class="badge ${esc(it.track)}">${esc(it.track.replaceAll('_',' '))}</span>
+    <span class="badge grounding">${esc(it.type.replaceAll('_',' '))}</span>
+    <h2>${esc(it.id)}</h2>
+    <h3>Official's query</h3><div class="prompt">${esc(it.prompt)}</div>
+    <h3>Indicator store the model sees</h3>
+    <pre>${esc(JSON.stringify(it.store,null,2))}</pre>
+    <div class="sys"><details><summary>Grounding system prompt (shared by all items)</summary>
+      <pre>${esc(DATA.system_prompt.replace('{store}','…item store above…'))}</pre></details></div>
+    <h3>Target behaviour</h3><div class="target">${esc(it.target)}</div>
+    <h3>Automatic checks applied</h3>
+    <div class="checks">${(it.flags.length?it.flags:['baseline']).map(f=>`<span>${esc(checks[f]||'faithful-retrieval baseline')}</span>`).join('')}</div>
+    <h3>Model responses</h3>${respHtml}`;
+}
+</script>
+</body>
+</html>
