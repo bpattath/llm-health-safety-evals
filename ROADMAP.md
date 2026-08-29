@@ -1,6 +1,6 @@
-# Roadmap — 10-week build
+# Roadmap — build plan (target: complete by 31 December 2026)
 
-*Contingent on seed funding for build time, expert honoraria, API credits, and compute.*
+*Contingent on seed funding for build time, expert honoraria, API credits, and compute. The core build is 10 weeks; weeks 11–14 are contingency buffer (reviewer availability, model-access delays, workshop scheduling), with everything shipped by end of December 2026.*
 
 | Weeks | Milestone |
 |---|---|
@@ -15,7 +15,7 @@
 
 | Item | Amount (USD) |
 |---|---|
-| Dedicated build time (~140 hours over 10 weeks, deliverable-bound; roughly half the lead's consulting day rate — the balance is contributed) | 5,600 |
+| Dedicated build time (~140 hours over 10–14 weeks, deliverable-bound; roughly half the lead's consulting day rate — the balance is contributed) | 5,600 |
 | Native-speaker and epidemiologist review honoraria (via the Nayaneethi network) | 800 |
 | API credits for evaluation runs (frontier models) | 2,000 |
 | Rented GPU compute for open-weight model evaluation | 850 |

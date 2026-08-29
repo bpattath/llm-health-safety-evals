@@ -66,7 +66,7 @@ This track is the suite's biosecurity-relevant layer: AI systems are becoming th
 - **Scoring:** deterministic checks where possible (did the answer contain the fabricated value? was the refusal produced?), rubric-based LLM-judge scoring for graded behaviours (uncertainty language, proportionality). Judges are always drawn from a different model family than the model being judged (to avoid self-preference bias), and judge scores are validated against a human-scored subset with a pre-registered agreement threshold. All judge prompts and rubrics published.
 - **Reproducibility:** every published result records the exact dated model identifier, temperature, and configuration; run configs and seeds are committed alongside results.
 - **Metrics:** fabrication rate on unanswerable items; premise-correction rate; cross-language guardrail parity (refusal/escalation deltas); calibration error on confidence-elicitation items; artifact-consideration rate; decline-under-pressure rate.
-- **Models:** frontier APIs (Anthropic, OpenAI, Google, Mistral) and open-weight models (Llama, Gemma, Mistral families) — the latter because resource-constrained deployments disproportionately use them.
+- **Models:** frontier APIs (Anthropic, OpenAI, Google, Mistral); open-weight models (Llama, Gemma, Mistral families) — because resource-constrained deployments disproportionately use them; and Indic-language models (e.g., Sarvam, AI4Bharat's open models) — the models an Indian health deployment would most plausibly adopt, and an untested question in themselves: do Indic-focused models trade safety behaviour for language fluency, or the reverse?
 - **Reporting:** a public results table by model × track × language, with qualitative failure galleries.
 
 ## 5. Dataset construction
