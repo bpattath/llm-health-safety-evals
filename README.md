@@ -2,7 +2,7 @@
 
 **An open evaluation suite for LLM decision-support in low-resource health systems: grounding, multilingual safety, and epidemic-signal reliability.**
 
-**Status: design phase complete — seeking seed funding to build.** This repository currently contains the design document, task taxonomy with drafted example items, and roadmap. Code and datasets will be developed here in the open.
+**Status: design phase complete, 12-item pilot harness runnable — seeking seed funding for the full build.** This repository contains the design document, task taxonomy with drafted example items, a dependency-free pilot runner ([/pilot](pilot)), and the roadmap. Code and datasets are developed here in the open.
 
 ## The problem
 
@@ -28,6 +28,7 @@ The tasks are not hypothetical — they mirror the queries, languages, data cond
 |---|---|
 | [docs/DESIGN.md](docs/DESIGN.md) | Full design: motivation, the three evaluation tracks, methodology, metrics, models covered, ethics |
 | [docs/TASK_TAXONOMY.md](docs/TASK_TAXONOMY.md) | Task taxonomy and drafted example evaluation items for each track |
+| [pilot/](pilot) | Runnable 12-item pilot (grounding + epidemic-signal tracks, English) with heuristic auto-flagging |
 | [ROADMAP.md](ROADMAP.md) | 10-week build plan and budget |
 
 ## Team and context
