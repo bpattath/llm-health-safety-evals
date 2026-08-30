@@ -1,4 +1,4 @@
-# Pilot draft results (automatic flags — pending human confirmation)
+# Pilot draft results (automatic flags, pending human confirmation)
 
 | Model | Item | Auto flags |
 |---|---|---|

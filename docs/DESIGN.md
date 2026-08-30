@@ -1,22 +1,22 @@
-# Design Document — LLM Health Safety Evals
+# Design Document: LLM Health Safety Evals
 
-*Version 0.1 — August 2026. Design phase; feedback welcome via issues.*
+*Version 0.1, August 2026. Design phase; feedback welcome via issues.*
 
 ## 1. Motivation
 
-LLM assistants are entering health systems in low- and middle-income countries with no context-appropriate safety evidence. The deployments moving fastest — chat interfaces over national health data, advisory tools for district health teams — are exactly the ones where failure is least visible and most costly: users have limited means to verify outputs, oversight is thin, and the populations affected are vulnerable.
+LLM assistants are entering health systems in low- and middle-income countries with no context-appropriate safety evidence. The deployments moving fastest (chat interfaces over national health data, advisory tools for district health teams) are exactly the ones where failure is least visible and most costly: users have limited means to verify outputs, oversight is thin, and the populations affected are vulnerable.
 
 Three published findings motivate the suite:
 
-- **Safety behaviour degrades outside English.** Models refuse harmful requests in English yet comply with equivalent requests in lower-resource languages; accuracy and calibration also fall. The deployment languages this suite covers — Malayalam and English–Malayalam code-switching — sit squarely in this gap.
-- **Retrieval grounding reduces but does not eliminate fabrication**, and grounding failures concentrate precisely where data is sparse — which, in post-2025 health systems, is most places.
+- **Safety behaviour degrades outside English.** Models refuse harmful requests in English yet comply with equivalent requests in lower-resource languages; accuracy and calibration also fall. The deployment languages this suite covers, Malayalam and English–Malayalam code-switching, sit squarely in this gap.
+- **Retrieval grounding reduces but does not eliminate fabrication**, and grounding failures concentrate precisely where data is sparse, which, in post-2025 health systems, is most places.
 - **Confidence communication shapes decisions.** For an official deciding whether to trigger a heat alert or escalate an outbreak investigation, a miscalibrated "certainly" is a different and worse failure than an honest "the data cannot tell us yet."
 
-**Related work and positioning.** OpenAI's HealthBench (2025) established rubric-based grading of realistic health conversations at scale, and we build directly on its learnings (physician-written rubrics, graded rather than binary scoring). It does not, however, cover grounded decision-support over a live indicator store, safety parity across deployment languages such as Malayalam and code-switched registers, or epistemic behaviour under degraded surveillance data. Multilingual safety studies (multilingual jailbreak and refusal-parity work) established that guardrails weaken outside English, but not in operational health contexts. Medical QA benchmarks (MedQA, MMLU clinical subsets) test static knowledge, not operational reliability. This suite occupies the intersection none of them reach — and is scoped to be reusable beyond its origin project.
+**Related work and positioning.** OpenAI's HealthBench (2025) established rubric-based grading of realistic health conversations at scale, and we build directly on its learnings (physician-written rubrics, graded rather than binary scoring). It does not, however, cover grounded decision-support over a live indicator store, safety parity across deployment languages such as Malayalam and code-switched registers, or epistemic behaviour under degraded surveillance data. Multilingual safety studies (multilingual jailbreak and refusal-parity work) established that guardrails weaken outside English, but not in operational health contexts. Medical QA benchmarks (MedQA, MMLU clinical subsets) test static knowledge, not operational reliability. This suite occupies the intersection none of them reach, and is scoped to be reusable beyond its origin project.
 
 ## 2. Deployment context
 
-The suite is designed against First Signal, a climate–health early-warning platform for Kerala, India, developed with the Nayaneethi Policy Collective (Wayanad, Kerala) — currently pre-prototype and fundraised separately. Its planned user-facing layer is a grounded chat assistant for health officials, specified to answer questions like *"Is risk rising in my district this week? Why?"* by querying a provenance-first indicator store (Copernicus ERA5-Land climate data, HMIS facility reporting, IHIP/IDSP disease surveillance, NFHS survey data, community reports) and returning numbers with sources and uncertainty attached — never free-generating statistics.
+The suite is designed against First Signal, a climate–health early-warning platform for Kerala, India, developed with the Nayaneethi Policy Collective (Wayanad, Kerala), currently pre-prototype and fundraised separately. Its planned user-facing layer is a grounded chat assistant for health officials, specified to answer questions like *"Is risk rising in my district this week? Why?"* by querying a provenance-first indicator store (Copernicus ERA5-Land climate data, HMIS facility reporting, IHIP/IDSP disease surveillance, NFHS survey data, community reports) and returning numbers with sources and uncertainty attached, never free-generating statistics.
 
 Kerala supplies unusually demanding test conditions: monsoon-driven outbreak dynamics (the 2018 floods were followed by a major leptospirosis surge) and repeated spillovers of a high-consequence pathogen (Nipah virus, 2018 and 2023). A district health official interpreting an ambiguous fever cluster in a district with Nipah history is precisely the user whose AI assistant must not overclaim. Kerala's unusually strong public-health monitoring and decentralised governance also make it a realistic early adopter: the suite is tested against a demanding, functioning system rather than a data vacuum. Evaluation items and results are validated with Kerala health-system practitioners convened through Nayaneethi, whose adjudications form practitioner gold labels for the graded items.
 
@@ -24,9 +24,9 @@ This context supplies the suite's realism: actual query patterns, actual languag
 
 ## 3. Evaluation tracks
 
-### Track 1 — Grounding and hallucination
+### Track 1: Grounding and hallucination
 
-**Question:** When constrained to a verified data store, does grounding hold — and what happens at its edges?
+**Question:** When constrained to a verified data store, does grounding hold, and what happens at its edges?
 
 Evaluated behaviours:
 - **Faithful retrieval:** answerable queries must return the stored value, with provenance.
@@ -35,11 +35,11 @@ Evaluated behaviours:
 - **False-premise correction:** queries presupposing a wrong fact ("Why did malaria cases double in X?" when they fell) must correct the premise rather than confabulate an explanation.
 - **No silent extrapolation:** requests for aggregates the store cannot support (national figures from three regions' data) must be declined or explicitly scoped.
 
-### Track 2 — Multilingual safety and calibration (Malayalam)
+### Track 2: Multilingual safety and calibration (Malayalam)
 
 **Question:** Do guardrails, escalation behaviour, and calibration survive translation into the languages of deployment?
 
-Evaluated behaviours, always as **matched cross-language sets** (same item in English, Malayalam, and English–Malayalam code-switching — the registers Kerala health staff actually use):
+Evaluated behaviours, always as **matched cross-language sets** (same item in English, Malayalam, and English–Malayalam code-switching: the registers Kerala health staff actually use):
 - **Guardrail parity:** clinical-overreach probes (requests for diagnosis or prescription that should be escalated to a clinician) must be handled identically across languages.
 - **Refusal consistency:** unsafe-advice requests (e.g., self-medication dosing) must be refused with equal reliability in every language.
 - **Calibration parity:** the hedging and uncertainty language attached to identical underlying evidence must convey the same confidence across languages.
@@ -47,16 +47,16 @@ Evaluated behaviours, always as **matched cross-language sets** (same item in En
 
 Malayalam items are drafted by the project lead (a native speaker) and independently reviewed by Malayalam-speaking health practitioners through the Nayaneethi network. The harness is built so further languages can be added cheaply by other teams.
 
-### Track 3 — Epidemic-signal reliability under degraded data
+### Track 3: Epidemic-signal reliability under degraded data
 
-**Question:** Given incomplete, degraded surveillance data — the post-2025 norm — can models interpret potential outbreak signals honestly?
+**Question:** Given incomplete, degraded surveillance data (the post-2025 norm), can models interpret potential outbreak signals honestly?
 
 Evaluated behaviours, on synthetic but realistic scenarios (a fever cluster after monsoon flooding in a district with Nipah spillover history; a post-flood leptospirosis surge against seasonal baselines; arbovirus season onset; data gaps from facility outages):
 - **Signal vs. noise:** distinguishing genuine anomalies from seasonal base rates.
 - **Artifact awareness:** considering reporting artifacts (a new facility joining the system, a backlog upload) as candidate explanations for apparent spikes.
 - **Calibrated uncertainty:** quantifying and communicating what the missing data means for confidence in any conclusion.
 - **Declining under pressure:** holding "the evidence is insufficient" even when the user demands a yes/no answer now.
-- **Proportionate action:** recommending verification steps (targeted data checks, community confirmation) rather than premature mass alerts — or premature reassurance.
+- **Proportionate action:** recommending verification steps (targeted data checks, community confirmation) rather than premature mass alerts or premature reassurance.
 
 This track is the suite's biosecurity-relevant layer: AI systems are becoming the interpretive layer over whatever surveillance data remains, and their reliability on exactly these tasks determines whether they narrow or widen the world's outbreak-detection gap.
 
@@ -66,12 +66,12 @@ This track is the suite's biosecurity-relevant layer: AI systems are becoming th
 - **Scoring:** deterministic checks where possible (did the answer contain the fabricated value? was the refusal produced?), rubric-based LLM-judge scoring for graded behaviours (uncertainty language, proportionality). Judges are always drawn from a different model family than the model being judged (to avoid self-preference bias), and judge scores are validated against a human-scored subset with a pre-registered agreement threshold. All judge prompts and rubrics published.
 - **Reproducibility:** every published result records the exact dated model identifier, temperature, and configuration; run configs and seeds are committed alongside results.
 - **Metrics:** fabrication rate on unanswerable items; premise-correction rate; cross-language guardrail parity (refusal/escalation deltas); calibration error on confidence-elicitation items; artifact-consideration rate; decline-under-pressure rate.
-- **Models:** frontier APIs (Anthropic, OpenAI, Google, Mistral); open-weight models (Llama, Gemma, Mistral families) — because resource-constrained deployments disproportionately use them; and Indic-language models (e.g., Sarvam, AI4Bharat's open models) — the models an Indian health deployment would most plausibly adopt, and an untested question in themselves: do Indic-focused models trade safety behaviour for language fluency, or the reverse?
+- **Models:** frontier APIs (Anthropic, OpenAI, Google, Mistral); open-weight models (Llama, Gemma, Mistral families), because resource-constrained deployments disproportionately use them; and Indic-language models (e.g., Sarvam, AI4Bharat's open models), the models an Indian health deployment would most plausibly adopt, and an untested question in themselves: do Indic-focused models trade safety behaviour for language fluency, or the reverse?
 - **Reporting:** a public results table by model × track × language, with qualitative failure galleries.
 
 ## 5. Dataset construction
 
-Items are synthetic, constructed from public data patterns and parameterised against real distributions (HMIS/IHIP indicator structures, NFHS and DLHS district indicators, ERA5 climate values), so fixtures carry realistic magnitudes, seasonality, and completeness rates — no real patient data, no PII, no operational surveillance data. Epidemiological plausibility is reviewed by public-health experts from the Nayaneethi network; language variants by native speakers, paid honoraria. Reviewers assess items blind (no authorship or expected-answer indication), and reviewer disagreements are logged rather than adjudicated by the item author. Items and results are validated in workshops with Kerala health-system practitioners convened through Nayaneethi.
+Items are synthetic, constructed from public data patterns and parameterised against real distributions (HMIS/IHIP indicator structures, NFHS and DLHS district indicators, ERA5 climate values), so fixtures carry realistic magnitudes, seasonality, and completeness rates. There is no real patient data, no PII, no operational surveillance data. Epidemiological plausibility is reviewed by public-health experts from the Nayaneethi network; language variants by native speakers, paid honoraria. Reviewers assess items blind (no authorship or expected-answer indication), and reviewer disagreements are logged rather than adjudicated by the item author. Items and results are validated in workshops with Kerala health-system practitioners convened through Nayaneethi.
 
 ## 6. Ethics and dual-use
 

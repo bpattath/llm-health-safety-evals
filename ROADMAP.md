@@ -1,10 +1,10 @@
-# Roadmap — build plan (target: complete by 31 December 2026)
+# Roadmap: build plan, complete by 31 December 2026
 
 *Contingent on seed funding for build time, expert honoraria, API credits, and compute. The core build is 10 weeks; weeks 11–14 are contingency buffer (reviewer availability, model-access delays, workshop scheduling), with everything shipped by end of December 2026.*
 
 | Weeks | Milestone |
 |---|---|
-| 1–2 | Inspect-based harness (item schema, mock indicator-store fixtures, runner — extending the included 12-item pilot); freeze Track 1 item set |
+| 1–2 | Inspect-based harness (item schema, mock indicator-store fixtures, runner, extending the included 12-item pilot); freeze Track 1 item set |
 | 3–5 | Dataset construction: draft full item sets for Tracks 2 and 3; epidemiologist review of scenarios; Malayalam variants drafted (project lead) and independently reviewed via the Nayaneethi network |
 | 6–7 | Evaluation runs: frontier APIs (Anthropic, OpenAI, Google, Mistral) and open-weight models (Llama, Gemma, Mistral families); judge-rubric validation against human-scored subset |
 | 8 | Analysis: metrics by model × track × language; failure galleries |
@@ -15,7 +15,7 @@
 
 | Item | Amount (USD) |
 |---|---|
-| Dedicated build time (~140 hours over 10–14 weeks, deliverable-bound; roughly half the lead's consulting day rate — the balance is contributed) | 5,600 |
+| Dedicated build time (~140 hours over 10–14 weeks, deliverable-bound; roughly half the lead's consulting day rate, with the balance contributed) | 5,600 |
 | Native-speaker and epidemiologist review honoraria (via the Nayaneethi network) | 800 |
 | API credits for evaluation runs (frontier models) | 2,000 |
 | Rented GPU compute for open-weight model evaluation | 850 |
