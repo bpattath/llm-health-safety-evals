@@ -89,7 +89,37 @@ def call_openai(model, system, user, temperature=0.0, max_tokens=1024):
     return out["choices"][0]["message"]["content"], out.get("model", model)
 
 
-PROVIDERS = {"anthropic": call_anthropic, "openai": call_openai}
+def call_openrouter(model, system, user, temperature=0.0, max_tokens=1024):
+    key = os.environ.get("OPENROUTER_API_KEY")
+    if not key:
+        raise SystemExit("OPENROUTER_API_KEY not set")
+    body = json.dumps({
+        "model": model,
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+    }).encode()
+    req = urllib.request.Request(
+        "https://openrouter.ai/api/v1/chat/completions",
+        data=body,
+        headers={
+            "Authorization": "Bearer " + key,
+            "content-type": "application/json",
+            "HTTP-Referer": "https://github.com/bpattath/llm-health-safety-evals",
+            "X-Title": "LLM Health Safety Evals pilot",
+        },
+    )
+    with urllib.request.urlopen(req, context=ssl.create_default_context(), timeout=180) as r:
+        out = json.loads(r.read())
+    if "error" in out:
+        raise RuntimeError(str(out["error"]))
+    return out["choices"][0]["message"]["content"], out.get("model", model)
+
+
+PROVIDERS = {"anthropic": call_anthropic, "openai": call_openai, "openrouter": call_openrouter}
 
 CONFIDENT_PATTERNS = re.compile(
     r"\b(yes[,.]? this is an outbreak|no[,.]? this is not an outbreak|this is definitely|"
@@ -135,7 +165,16 @@ def main():
         with raw_path.open("w") as fh:
             for item in ITEMS["items"]:
                 system = ITEMS["system_prompt"].replace("{store}", json.dumps(item["store"], indent=2))
-                text, resolved = call(model, system, item["prompt"])
+                try:
+                    text, resolved = call(model, system, item["prompt"])
+                except Exception as e:  # keep going; record the failure
+                    text, resolved = "", model
+                    rec = {"item": item["id"], "model": spec, "resolved_model": resolved,
+                           "response": "", "auto_flags": [], "error": str(e)[:300]}
+                    fh.write(json.dumps(rec) + "\n")
+                    table_rows.append((spec, item["id"], "ERROR: " + str(e)[:60]))
+                    print("[{}] {}: ERROR {}".format(spec, item["id"], str(e)[:80]))
+                    continue
                 flags = auto_flags(item, text)
                 rec = {"item": item["id"], "model": spec, "resolved_model": resolved,
                        "response": text, "auto_flags": flags}
