@@ -43,7 +43,7 @@ Models: Claude Sonnet 5, GPT-5.6-terra, Gemini 2.5 Flash, Llama 3.3 70B, Gemma 3
 
 ## Team and context
 
-Led by Balasubramanyam Pattath (PhD economist / data scientist, Geneva Graduate Institute; native Malayalam speaker), consultant with the [Nayaneethi Policy Collective](https://www.nayaneethi.com) (Wayanad, Kerala), which hosts the First Signal initiative and supplies the local health-system networks, epidemiologist review, and Malayalam-speaking reviewers behind the evaluation items.
+Led by Balasubramanyam Pattath (PhD economist / data scientist, Geneva Graduate Institute; native Malayalam speaker), consultant with the [Nayaneethi Policy Collective](https://www.nayaneethi.com) (Wayanad, Kerala), which hosts the First Signal initiative and supplies the local health-system networks, epidemiologist review, and Malayalam-speaking reviewers behind the evaluation items. Previously a consultant economist with the World Bank Group and research assistant at NORRAG and the Geneva Graduate Institute; published research on vaccination, including as research assistant on a J-PAL/IGC-funded RCT pilot on child vaccinations.
 
 ## Licensing
 
